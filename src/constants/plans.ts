@@ -1,0 +1,47 @@
+export const plans = [
+  {
+    id: "basic",
+    name: "Basic",
+    price: 9.99,
+    credits: 100,
+    popular: false,
+    description: "Perfect for getting started with AI image generation.",
+    features: [
+      "100 credits per month",
+      "Standard generation speed",
+      "Access to all basic models",
+      "Email support",
+    ],
+  },
+  {
+    id: "pro",
+    name: "Pro",
+    price: 19.99,
+    credits: 300,
+    popular: true,
+    description: "Best value for creators and frequent users.",
+    features: [
+      "300 credits per month",
+      "Faster generation speed",
+      "Priority processing",
+      "Advanced AI models",
+      "Priority support",
+    ],
+  },
+  {
+    id: "premium",
+    name: "Premium",
+    price: 49.99,
+    credits: 1000,
+    popular: false,
+    description: "Designed for power users and professionals.",
+    features: [
+      "1000 credits per month",
+      "Fastest generation speed",
+      "Highest priority queue",
+      "Premium AI models",
+      "Early access to new features",
+      "Dedicated support",
+    ],
+  },
+];
