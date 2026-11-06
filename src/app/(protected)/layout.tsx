@@ -15,7 +15,7 @@ export default async function ProtectedLayout({
   }
   return (
     <div>
-      <Sidebar />
+      <Sidebar initialCredits={user.credits ?? 0} username={user.name} />
       <DashboardLayout>{children}</DashboardLayout>
     </div>
   );

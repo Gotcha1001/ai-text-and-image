@@ -13,7 +13,12 @@ import { RiCoinsLine } from "react-icons/ri";
 import { authClient } from "@/lib/auth-client";
 import { getChats } from "@/server-actions/getChat";
 
-export default function Sidebar() {
+interface SidebarProps {
+  username: string;
+  initialCredits: number;
+}
+
+export default function Sidebar({ username, initialCredits }: SidebarProps) {
   const { openMobile, closeMobile, isExpanded, isMobileOpen, toggleExpanded } =
     useSidebarStore();
 
@@ -171,7 +176,7 @@ export default function Sidebar() {
                 <RiCoinsLine size={18} className="text-yellow-500" />
                 <span className="text-sm font-medium">Credits</span>
               </div>
-              <p className="mt-3 text-2xl font-bold">120</p>
+              <p className="mt-3 text-2xl font-bold">{initialCredits}</p>
               <p className="text-muted text-xs">Remaining Credits</p>
             </div>
           ) : (
@@ -187,11 +192,11 @@ export default function Sidebar() {
             className={`flex w-full items-center rounded-xl p-2 hover:bg-card ${!isExpanded && "justify-center"}`}
           >
             <div className="grid h-10 w-10 place-items-center rounded-full bg-violet-600 font-semibold text-white">
-              W
+              {username.charAt(0).toUpperCase()}
             </div>
             {isExpanded && (
               <div className="ml-3 text-left">
-                <p className="text-md font-medium">Wesley</p>
+                <p className="text-md font-medium">{username}</p>
               </div>
             )}
           </button>
