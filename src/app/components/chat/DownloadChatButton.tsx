@@ -91,48 +91,17 @@ export default function DownloadChatButton() {
         }
       };
 
-      // Title
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(16);
-      doc.setTextColor(20, 20, 20);
-      const titleLines = doc.splitTextToSize(
-        toPdfText(selectedChat.title),
-        maxW,
+      // Only the AI output goes in the PDF (no prompts, no labels)
+      const outputs = messages.filter(
+        (message) => message.role === "ASSISTANT",
       );
-      doc.text(titleLines, margin, y + 5);
-      y += titleLines.length * 7 + 2;
 
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(9);
-      doc.setTextColor(120, 120, 120);
-      doc.text(`Exported ${new Date().toLocaleString()}`, margin, y + 3);
-      y += 6;
-      doc.setDrawColor(210, 210, 210);
-      doc.line(margin, y, pageW - margin, y);
-      y += 6;
+      if (outputs.length === 0) {
+        toast.error("Nothing to download yet.");
+        return;
+      }
 
-      for (const message of messages) {
-        const isUser = message.role === "USER";
-
-        // Role label + timestamp
-        ensureSpace(14);
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(10);
-        if (isUser) doc.setTextColor(37, 99, 235);
-        else doc.setTextColor(124, 58, 237);
-        const label = isUser ? "You" : "NextGPT";
-        doc.text(label, margin, y + 4);
-
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(8);
-        doc.setTextColor(150, 150, 150);
-        doc.text(
-          new Date(message.createdAt).toLocaleString(),
-          margin + doc.getTextWidth(label) + 3,
-          y + 4,
-        );
-        y += 8;
-
+      for (const message of outputs) {
         // Text content
         if (message.content) {
           doc.setFont("helvetica", "normal");
@@ -147,7 +116,7 @@ export default function DownloadChatButton() {
 
           for (const line of lines) {
             ensureSpace(lineH);
-            doc.text(line, margin, y + 3.5);
+            doc.text(line, pageW / 2, y + 3.5, { align: "center" });
             y += lineH;
           }
           y += 2;
@@ -169,18 +138,26 @@ export default function DownloadChatButton() {
             }
 
             ensureSpace(h + 2);
-            doc.addImage(img.data, "JPEG", margin, y, w, h);
+            doc.addImage(img.data, "JPEG", (pageW - w) / 2, y, w, h);
             y += h + 2;
           } catch {
             ensureSpace(6);
             doc.setFontSize(9);
             doc.setTextColor(150, 150, 150);
-            doc.text("[Image could not be included]", margin, y + 3.5);
+            doc.text("[Image could not be included]", pageW / 2, y + 3.5, {
+              align: "center",
+            });
             y += 6;
           }
         }
 
-        y += 5;
+        y += 4;
+        if (message !== outputs[outputs.length - 1]) {
+          ensureSpace(8);
+          doc.setDrawColor(230, 230, 230);
+          doc.line(margin, y, pageW - margin, y);
+          y += 6;
+        }
       }
 
       // Page numbers
