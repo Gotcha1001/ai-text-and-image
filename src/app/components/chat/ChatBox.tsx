@@ -16,6 +16,7 @@ import { generateImage } from "@/server-actions/generateImage";
 import ImageGeneratingIndicator from "../loading/ImageGeneratingIndicator";
 import { consumeCredits } from "@/server-actions/consumeCredits";
 import { checkRateLimit } from "@/server-actions/checkRateLimit";
+import DownloadChatButton from "./DownloadChatButton";
 
 export default function ChatBox() {
   const {
@@ -148,6 +149,7 @@ export default function ChatBox() {
 
   return (
     <>
+      <DownloadChatButton />
       <div className="flex-1 overflow-y-auto pb-4 no-scrollbar">
         {!selectedChat ? (
           <div className="flex h-full flex-col items-center justify-center text-center">

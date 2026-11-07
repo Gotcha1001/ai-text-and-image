@@ -20,6 +20,7 @@
     "better-auth": "^1.7.15",
     "cloudinary": "^2.11.0",
     "dotenv": "^18.0.9",
+    "jspdf": "^4.2.1",
     "next": "16.4.3",
     "react": "19.3.0",
     "react-dom": "19.3.0",
