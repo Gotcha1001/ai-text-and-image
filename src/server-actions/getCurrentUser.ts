@@ -1,4 +1,6 @@
+// server-actions/getCurrentUser.ts
 "use server";
+
 import { prisma } from "@/database/db";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
@@ -15,6 +17,7 @@ export async function getCurrentUser() {
     select: {
       id: true,
       name: true,
+      email: true,
       credits: true,
     },
   });

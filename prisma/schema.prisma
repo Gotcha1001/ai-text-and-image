@@ -32,14 +32,14 @@ model User {
 }
 
 model CreditPurchase {
-    id              String   @id @default(cuid())
-    stripeSessionId String   @unique
-    userId          String
-    user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-    credits         Int
-    amountTotal     Int?
-    currency        String?
-    createdAt       DateTime @default(now())
+    id                String   @id @default(cuid())
+    paystackReference String   @unique
+    userId            String
+    user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    credits           Int
+    amountTotal       Int?
+    currency          String?
+    createdAt         DateTime @default(now())
 
     @@index([userId])
     @@map("credit_purchase")
