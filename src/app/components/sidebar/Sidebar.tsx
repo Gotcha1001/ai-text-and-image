@@ -41,6 +41,7 @@ export default function Sidebar({ username, initialCredits }: SidebarProps) {
   };
 
   const handleNewChat = () => {
+    router.replace("/chat");
     setSelectedChat(null);
     setMessages([]);
   };
