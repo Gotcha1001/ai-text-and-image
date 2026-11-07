@@ -1,7 +1,9 @@
+// server-actions/createCheckout.ts
 "use server";
+
 import { plans } from "@/constants/plans";
 import { getCurrentUser } from "./getCurrentUser";
-import { stripe } from "@/lib/stripe";
+import { initializeTransaction } from "@/lib/paystack";
 
 export async function createCheckout(planId: string) {
   const currentUser = await getCurrentUser();
@@ -16,32 +18,20 @@ export async function createCheckout(planId: string) {
     throw new Error("Invalid plan.");
   }
 
-  const session = await stripe.checkout.sessions.create({
-    mode: "payment",
-
+  const transaction = await initializeTransaction({
+    email: currentUser.email,
+    amount: Math.round(plan.price * 100), // smallest currency unit
+    currency: process.env.PAYSTACK_CURRENCY ?? "ZAR",
+    reference: crypto.randomUUID(),
+    callback_url: `${process.env.NEXT_PUBLIC_APP_URL}/chat`,
     metadata: {
       app: "nextgpt",
       userId: currentUser.id,
       credits: plan.credits.toString(),
+      planId: plan.id,
+      cancel_action: `${process.env.NEXT_PUBLIC_APP_URL}/pricing`,
     },
-
-    line_items: [
-      {
-        quantity: 1,
-        price_data: {
-          currency: "usd",
-
-          product_data: {
-            name: `${plan.name} Credits`,
-            description: `${plan.credits} credits included`,
-          },
-          unit_amount: Math.round(plan.price * 100),
-        },
-      },
-    ],
-    success_url: `${process.env.NEXT_PUBLIC_APP_URL}/chat`,
-    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/pricing`,
   });
 
-  return session.url;
+  return transaction.authorization_url;
 }
