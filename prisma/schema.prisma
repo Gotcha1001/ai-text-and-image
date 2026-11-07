@@ -24,10 +24,25 @@ model User {
     accounts      Account[]
     chats         Chat[]
 
-    credits Int @default(10)
+    credits         Int              @default(10)
+    creditPurchases CreditPurchase[]
 
     @@unique([email])
     @@map("user")
+}
+
+model CreditPurchase {
+    id              String   @id @default(cuid())
+    stripeSessionId String   @unique
+    userId          String
+    user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    credits         Int
+    amountTotal     Int?
+    currency        String?
+    createdAt       DateTime @default(now())
+
+    @@index([userId])
+    @@map("credit_purchase")
 }
 
 model Chat {

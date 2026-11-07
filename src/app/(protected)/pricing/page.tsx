@@ -1,7 +1,24 @@
+"use client";
 import { plans } from "@/constants/plans";
+import { createCheckout } from "@/server-actions/createCheckout";
+import { useRouter } from "next/navigation";
 import { LuCheck } from "react-icons/lu";
 
 export default function PricingPage() {
+  const router = useRouter();
+
+  const handleCheckout = async (planId: string) => {
+    try {
+      const url = await createCheckout(planId);
+
+      if (url) {
+        router.push(url);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="mx-auto flex min-h-screen max-w-6xl flex-col px-4 py-6">
       {/* Header */}
@@ -40,6 +57,7 @@ export default function PricingPage() {
               ))}
             </ul>
             <button
+              onClick={() => handleCheckout(plan.id)}
               className={`mt-8 w-full rounded-xl py-3 font-medium transition-colors cursor-pointer ${plan.popular ? "bg-linear-to-r from-blue-600 to-purple-600 text-white hover:opacity-90" : "border border-border hover:bg-muted"}`}
             >
               Choose Plan
