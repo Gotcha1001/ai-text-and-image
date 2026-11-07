@@ -118,13 +118,11 @@ export default function ChatBox() {
       }
 
       // Send the prompt to the AI
-      const history = messages
-        .filter((message) => message.content)
-        .slice(-20)
-        .map((message) => ({
-          role: message.role,
-          content: message.content!,
-        }));
+      const history = messages.slice(-20).map((message) => ({
+        role: message.role,
+        content:
+          message.content ?? "[Generated an image from the previous prompt]",
+      }));
 
       const aiResponse = await generateText({
         prompt: currentPrompt,
