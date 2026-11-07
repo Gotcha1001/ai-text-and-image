@@ -237,6 +237,18 @@ export default function ChatBox() {
           <textarea
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
+            onKeyDown={(e) => {
+              // Enter sends, Shift+Enter inserts a new line
+              if (
+                e.key === "Enter" &&
+                !e.shiftKey &&
+                !e.nativeEvent.isComposing
+              ) {
+                e.preventDefault();
+                if (loadingType) return; // don't send while a reply is generating
+                e.currentTarget.form?.requestSubmit();
+              }
+            }}
             rows={1}
             placeholder={
               mode === "TEXT"
